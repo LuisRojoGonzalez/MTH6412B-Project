@@ -3,6 +3,7 @@ using Plots
 """Analyse un fichier .tsp et renvoie un dictionnaire avec les données de l'entête."""
 function read_header(filename::String)
 
+  # filename = "/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp"
   file = open(filename, "r")
   header = Dict{String}{String}()
   sections = ["NAME", "TYPE", "COMMENT", "DIMENSION", "EDGE_WEIGHT_TYPE", "EDGE_WEIGHT_FORMAT",
@@ -90,9 +91,11 @@ function n_nodes_to_read(format::String, n::Int, dim::Int)
   end
 end
 
+# this function must be updated to add edges
 """Analyse un fichier .tsp et renvoie l'ensemble des arêtes sous la forme d'un tableau."""
 function read_edges(header::Dict{String}{String}, filename::String)
 
+  # this is the array to save the weights
   edges = []
   edge_weight_format = header["EDGE_WEIGHT_FORMAT"]
   known_edge_weight_formats = ["FULL_MATRIX", "UPPER_ROW", "LOWER_ROW",
@@ -116,11 +119,13 @@ function read_edges(header::Dict{String}{String}, filename::String)
   for line in eachline(file)
     line = strip(line)
     if !flag
+      # this reads the edges
       if occursin(r"^EDGE_WEIGHT_SECTION", line)
         edge_weight_section = true
         continue
       end
 
+      # this reads the edges weights and add it to a vector
       if edge_weight_section
         data = split(line)
         n_data = length(data)
@@ -128,21 +133,26 @@ function read_edges(header::Dict{String}{String}, filename::String)
         while n_data > 0
           n_on_this_line = min(n_to_read, n_data)
 
+          # creates a vector of edges in a (from, to) fashion
+          # it seems that there is a third component to add to the vector and therefore
+          # to the edges array
           for j = start : start + n_on_this_line - 1
             n_edges = n_edges + 1
             if edge_weight_format in ["UPPER_ROW", "LOWER_COL"]
-              edge = (k+1, i+k+2)
+              edge = (k+1, i+k+2, parse(Float64, data[j+1]))
             elseif edge_weight_format in ["UPPER_DIAG_ROW", "LOWER_DIAG_COL"]
-              edge = (k+1, i+k+1)
+              edge = (k+1, i+k+1, parse(Float64, data[j+1]))
             elseif edge_weight_format in ["UPPER_COL", "LOWER_ROW"]
-              edge = (i+k+2, k+1)
+              edge = (i+k+2, k+1, parse(Float64, data[j+1]))
             elseif edge_weight_format in ["UPPER_DIAG_COL", "LOWER_DIAG_ROW"]
-              edge = (i+1, k+1)
+              edge = (i+1, k+1, parse(Float64, data[j+1]))
             elseif edge_weight_format == "FULL_MATRIX"
-              edge = (k+1, i+1)
+              edge = (k+1, i+1, parse(Float64, data[j+1]))
             else
               warn("Unknown format - function read_edges")
             end
+            # # this is extra
+            # println(edge)
             push!(edges, edge)
             i += 1
           end
@@ -185,15 +195,20 @@ function read_stsp(filename::String)
   edges_brut = read_edges(header, filename)
   graph_edges = []
   for k = 1 : dim
-    edge_list = Int[]
+    # edge_list = Int[]
+    # this changes the structure to add a charcateristic of the origin node
+    # the first is the destination, while the second is the weight
+    edge_list = Array[]
     push!(graph_edges, edge_list)
   end
 
   for edge in edges_brut
     if edge_weight_format in ["UPPER_ROW", "LOWER_COL", "UPPER_DIAG_ROW", "LOWER_DIAG_COL"]
-      push!(graph_edges[edge[1]], edge[2])
+      # push!(graph_edges[edge[1]], edge[2])
+      push!(graph_edges[edge[1]], [edge[2], edge[3]])
     else
-      push!(graph_edges[edge[2]], edge[1])
+      # push!(graph_edges[edge[2]], edge[1])
+      push!(graph_edges[edge[2]], [edge[1], edge[3]])
     end
   end
 
@@ -217,9 +232,13 @@ function plot_graph(nodes, edges)
 
   # edge positions
   for k = 1 : length(edges)
-    for j in edges[k]
-      plot!([nodes[k][1], nodes[j][1]], [nodes[k][2], nodes[j][2]],
-          linewidth=1.5, alpha=0.75, color=:lightgray)
+    # go to all edges going out from each node
+    for j in 1 : length(edges[k])
+      # # it plots the line segments in the scatter plot
+      # plot!([nodes[k][1], nodes[j][1]], [nodes[k][2], nodes[j][2]],
+      #       linewidth=1.5, alpha=0.75, color=:lightgray)
+      plot!([nodes[k][1], nodes[edges[k][j][1]][1]], [nodes[k][2], nodes[edges[k][j][1]][2]],
+            linewidth=1.5, alpha=0.75, color=:lightgray)
     end
   end
 
@@ -237,3 +256,6 @@ function plot_graph(filename::String)
   graph_nodes, graph_edges = read_stsp(filename)
   plot_graph(graph_nodes, graph_edges)
 end
+
+graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
+plot_graph(graph_nodes, graph_edges)
