@@ -219,6 +219,7 @@ function read_stsp(filename::String)
   return graph_nodes, graph_edges
 end
 
+#=
 """Affiche un graphe étant données un ensemble de noeuds et d'arêtes.
 
 Exemple :
@@ -227,6 +228,7 @@ Exemple :
     plot_graph(graph_nodes, graph_edges)
     savefig("bayg29.pdf")
 """
+=#
 function plot_graph(nodes, edges)
   fig = plot(legend=false)
 
@@ -257,5 +259,5 @@ function plot_graph(filename::String)
   plot_graph(graph_nodes, graph_edges)
 end
 
-graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
-plot_graph(graph_nodes, graph_edges)
+#graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
+#plot_graph(graph_nodes, graph_edges)
