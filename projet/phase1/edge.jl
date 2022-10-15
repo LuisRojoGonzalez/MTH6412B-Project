@@ -1,37 +1,23 @@
 import Base.show
+include("./node.jl")
 
-""" Abstract type for the edges of the graph."""
+"""Type abstrait dont d'autres types d'aretes dériveront."""
 abstract type AbstractEdge{T} end
 
-"""Type representing the edges of the graph.
-
-Exemple:
-
-        edge = Edge(From, [To, weight])
-        edge = Edge("Montreal", ["Vancouver", 2635])
-        edge = Edge("Montreal", ["Boston", 1768])
-
+"""Type représentant les aretes d'un graphe.
 """
 mutable struct Edge{T} <: AbstractEdge{T}
-  from::String
-  to::String
-  data::T
+  ends::Tuple{Node{T}, Node{T}}
+  weight::Int
 end
 
-# accordingly, each edge has an associated origin (from),
-# destination (to) and a weight (data)
-# the latter is regardless the symmetry of the problem
 
-"""Get the origin of the edge."""
-from(edge::AbstractEdge) = edge.from
+ends(edge::AbstractEdge) = edge.ends
 
-"""Get the destination of the edge."""
-to(edge::AbstractEdge) = edge.to
 
-"""Get the weight of the node."""
-data(edge::AbstractEdge) = edge.data
+weight(edge::AbstractEdge) = edge.weight
 
-"""It characterizes the edges."""
+
 function show(edge::AbstractEdge)
-  println("Edge from ", from(edge), " to ", to(edge), ", weight: ", data(edge))
+  println( "Edge:  ($(name(ends(edge)[1])),$(name(ends(edge)[2])))   weight: $(weight(edge))" )
 end
