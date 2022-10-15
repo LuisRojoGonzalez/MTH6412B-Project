@@ -1,5 +1,6 @@
 import Base.show
 
+include("./edge.jl")
 """Type abstrait dont d'autres types de graphes dériveront."""
 abstract type AbstractGraph{T} end
 
@@ -14,16 +15,23 @@ Exemple :
 
 Attention, tous les noeuds doivent avoir des données de même type.
 """
+
 mutable struct Graph{T} <: AbstractGraph{T}
   name::String
   nodes::Vector{Node{T}}
   # this has been added to consider an edge
-  edges::Array{Edge{T}}
+  edges::Vector{Edge{T}}
 end
 
-"""This adds a node to the graph and the edges connecting them."""
-function add_node!(graph::Graph{T}, node::Node{T}, edge::Edge{T}) where T
-  push!(graph.nodes, node, edge)
+"""This adds a node to the graph,"""
+function add_node!(graph::Graph{T}, node::Node{T}) where T
+  push!(graph.nodes, node)
+  graph
+end
+
+"""while this adds the edges to it."""
+function add_edge!(graph::Graph{T}, edge::Edge{T}) where T
+  push!(graph.edges,edge)
   graph
 end
 
@@ -35,12 +43,16 @@ name(graph::AbstractGraph) = graph.name
 """Renvoie la liste des noeuds du graphe."""
 nodes(graph::AbstractGraph) = graph.nodes
 
-# added to get the list of edges
-"""Renvoie la liste des aretes du graphe."""
-nodes(graph::AbstractGraph) = graph.edges
+# # this is useless in our new structure
+# # added to get the list of edges
+# """Renvoie la liste des aretes du graphe."""
+# nodes(graph::AbstractGraph) = graph.edges
 
 """Renvoie le nombre de noeuds du graphe."""
 nb_nodes(graph::AbstractGraph) = length(graph.nodes)
+
+"""Renvoie le nombre de edges du graphe."""
+edges(graph::AbstractGraph) = graph.edges
 
 # added to get the number of edges in the graph
 # this might be useful when non-complete graphs are considered
