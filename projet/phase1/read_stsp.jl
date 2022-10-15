@@ -1,5 +1,7 @@
 using Plots
 
+using("./graph.jl")
+
 """Analyse un fichier .tsp et renvoie un dictionnaire avec les données de l'entête."""
 function read_header(filename::String)
 
@@ -36,7 +38,6 @@ function read_nodes(header::Dict{String}{String}, filename::String)
   nodes = Dict{Int}{Vector{Float64}}()
   node_coord_type = header["NODE_COORD_TYPE"]
   display_data_type = header["DISPLAY_DATA_TYPE"]
-
 
   if !(node_coord_type in ["TWOD_COORDS", "THREED_COORDS"]) && !(display_data_type in ["COORDS_DISPLAY", "TWOD_DISPLAY"])
     return nodes
@@ -95,8 +96,11 @@ end
 """Analyse un fichier .tsp et renvoie l'ensemble des arêtes sous la forme d'un tableau."""
 function read_edges(header::Dict{String}{String}, filename::String)
 
-  # this is the array to save the weights
+  # this saves the connections
   edges = []
+  # this is the array to save the weights
+  weights = []
+
   edge_weight_format = header["EDGE_WEIGHT_FORMAT"]
   known_edge_weight_formats = ["FULL_MATRIX", "UPPER_ROW", "LOWER_ROW",
   "UPPER_DIAG_ROW", "LOWER_DIAG_ROW", "UPPER_COL", "LOWER_COL",
@@ -154,6 +158,9 @@ function read_edges(header::Dict{String}{String}, filename::String)
             # # this is extra
             # println(edge)
             push!(edges, edge)
+            # this gets and adds the weight, and converts the string into a integer to handle the
+            # data in the right form
+            push!(weights, parse(Int, data[j+1]))
             i += 1
           end
 
@@ -192,7 +199,8 @@ function read_stsp(filename::String)
   println("✓")
 
   Base.print("Reading of edges : ")
-  edges_brut = read_edges(header, filename)
+  edges_brut, weights = read_edges(header, filename)
+  
   graph_edges = []
   for k = 1 : dim
     # edge_list = Int[]
@@ -204,11 +212,9 @@ function read_stsp(filename::String)
 
   for edge in edges_brut
     if edge_weight_format in ["UPPER_ROW", "LOWER_COL", "UPPER_DIAG_ROW", "LOWER_DIAG_COL"]
-      # push!(graph_edges[edge[1]], edge[2])
-      push!(graph_edges[edge[1]], [edge[2], edge[3]])
+      push!(graph_edges[edge[1]], edge[2])
     else
-      # push!(graph_edges[edge[2]], edge[1])
-      push!(graph_edges[edge[2]], [edge[1], edge[3]])
+      push!(graph_edges[edge[2]], edge[1])
     end
   end
 
@@ -216,7 +222,7 @@ function read_stsp(filename::String)
     graph_edges[k] = sort(graph_edges[k])
   end
   println("✓")
-  return graph_nodes, graph_edges
+  return graph_nodes, graph_edges, edges_brut, weights
 end
 
 #=
@@ -236,10 +242,8 @@ function plot_graph(nodes, edges)
   for k = 1 : length(edges)
     # go to all edges going out from each node
     for j in 1 : length(edges[k])
-      # # it plots the line segments in the scatter plot
-      # plot!([nodes[k][1], nodes[j][1]], [nodes[k][2], nodes[j][2]],
-      #       linewidth=1.5, alpha=0.75, color=:lightgray)
-      plot!([nodes[k][1], nodes[edges[k][j][1]][1]], [nodes[k][2], nodes[edges[k][j][1]][2]],
+      # it plots the line segments in the scatter plot
+      plot!([nodes[k][1], nodes[j][1]], [nodes[k][2], nodes[j][2]],
             linewidth=1.5, alpha=0.75, color=:lightgray)
     end
   end
