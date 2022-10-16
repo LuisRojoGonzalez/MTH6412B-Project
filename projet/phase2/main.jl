@@ -2,11 +2,8 @@
 # filename and saving the object via build_graph function
 
 include("read_stsp.jl")
+include("kruskal.jl")
 
 g = build_graph("bayg29.tsp")
 
-#show(g)
-
-g["Edges_v"]
-g["Weights"]
-g["Plot"]
+mst = kruskal(g)
