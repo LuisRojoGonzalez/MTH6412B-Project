@@ -271,7 +271,8 @@ function build_graph(filename::String)
   path = "/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/$(filename)"
   graph_nodes, graph_edges, edges_brut, weights = read_stsp(path)
   plot = plot_graph(graph_nodes, graph_edges)
-  return graph_nodes, graph_edges, edges_brut, weights, plot
+  return Dict("Nodes" => graph_nodes, "Edges_m" => graph_edges,
+              "Edges_v" => edges_brut, "Weights" => weights, "Plot" => plot)
 end
 
 #graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
