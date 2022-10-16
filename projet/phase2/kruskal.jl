@@ -1,13 +1,11 @@
 import Base
 
 """
-This script contains the kruskal algorithm to create a minimum spanning tree of a undirected graph.
+This script contains the kruskal algorithm to create a minimum spanning tree of a undirected graph. The following
+implementation is based on pseudo-code in Introcution to algorithms (3 eds.) section 23.2 pp. 631.
 """
 
-# the following implementation is based on pseudo-code in Introcution to algorithms (3 eds.) section 23.2
-# pp. 631
-
-function kruskal(g::Graph{T})
+function kruskal(g)#(g::Graph{T})
     # we create the MST object
     A = []
     
@@ -15,7 +13,8 @@ function kruskal(g::Graph{T})
     total = 0
     
     # initialize the set of trees
-    tree_set = [[i] for i in 1:length(g["Edges_m"])]
+    #tree_set = [[i] for i in 1:length(g["Edges_m"])]
+    tree_set = [[i] for i in 1:length(g["Nodes"])]
     
     # it gets the index in which ordering the edges
     sortindex = sortperm(g["Weights"])
@@ -24,7 +23,7 @@ function kruskal(g::Graph{T})
     index = 0
     
     # we know that there are going to be |V|-1 edges
-    while length(A) < length(g["Edges_m"]) - 1
+    while length(A) < length(g["Nodes"]) - 1
         index += 1
         # gets the edge
         edge = g["Edges_v"][sortindex[index]] # replace sortindex[1] with the counter in the loop
