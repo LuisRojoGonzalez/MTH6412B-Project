@@ -1,6 +1,6 @@
 using Plots
 
-using("./graph.jl")
+#using("graph.jl")
 
 """Analyse un fichier .tsp et renvoie un dictionnaire avec les données de l'entête."""
 function read_header(filename::String)
@@ -143,15 +143,15 @@ function read_edges(header::Dict{String}{String}, filename::String)
           for j = start : start + n_on_this_line - 1
             n_edges = n_edges + 1
             if edge_weight_format in ["UPPER_ROW", "LOWER_COL"]
-              edge = (k+1, i+k+2, parse(Float64, data[j+1]))
+              edge = (k+1, i+k+2)
             elseif edge_weight_format in ["UPPER_DIAG_ROW", "LOWER_DIAG_COL"]
-              edge = (k+1, i+k+1, parse(Float64, data[j+1]))
+              edge = (k+1, i+k+1)
             elseif edge_weight_format in ["UPPER_COL", "LOWER_ROW"]
-              edge = (i+k+2, k+1, parse(Float64, data[j+1]))
+              edge = (i+k+2, k+1)
             elseif edge_weight_format in ["UPPER_DIAG_COL", "LOWER_DIAG_ROW"]
-              edge = (i+1, k+1, parse(Float64, data[j+1]))
+              edge = (i+1, k+1)
             elseif edge_weight_format == "FULL_MATRIX"
-              edge = (k+1, i+1, parse(Float64, data[j+1]))
+              edge = (k+1, i+1)
             else
               warn("Unknown format - function read_edges")
             end
@@ -183,7 +183,7 @@ function read_edges(header::Dict{String}{String}, filename::String)
     end
   end
   close(file)
-  return edges
+  return edges, weights
 end
 
 """Renvoie les noeuds et les arêtes du graphe."""
@@ -196,6 +196,7 @@ function read_stsp(filename::String)
 
   Base.print("Reading of nodes : ")
   graph_nodes = read_nodes(header, filename)
+  #@show graph_nodes
   println("✓")
 
   Base.print("Reading of edges : ")
@@ -206,12 +207,14 @@ function read_stsp(filename::String)
     # edge_list = Int[]
     # this changes the structure to add a charcateristic of the origin node
     # the first is the destination, while the second is the weight
-    edge_list = Array[]
+    edge_list = Int[]
     push!(graph_edges, edge_list)
   end
 
   for edge in edges_brut
     if edge_weight_format in ["UPPER_ROW", "LOWER_COL", "UPPER_DIAG_ROW", "LOWER_DIAG_COL"]
+      #@show edge[1]
+      #@show edge[2]
       push!(graph_edges[edge[1]], edge[2])
     else
       push!(graph_edges[edge[2]], edge[1])
@@ -261,6 +264,14 @@ end
 function plot_graph(filename::String)
   graph_nodes, graph_edges = read_stsp(filename)
   plot_graph(graph_nodes, graph_edges)
+end
+
+"""Function to construct the graph."""
+function build_graph(filename::String)
+  path = "/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/$(filename)"
+  graph_nodes, graph_edges = read_stsp(path)
+  plot = plot_graph(graph_nodes, graph_edges)
+  return graph_nodes, graph_edges, plot
 end
 
 #graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
