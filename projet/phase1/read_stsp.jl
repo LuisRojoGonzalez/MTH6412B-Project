@@ -269,9 +269,9 @@ end
 """Function to construct the graph."""
 function build_graph(filename::String)
   path = "/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/$(filename)"
-  graph_nodes, graph_edges = read_stsp(path)
+  graph_nodes, graph_edges, edges_brut, weights = read_stsp(path)
   plot = plot_graph(graph_nodes, graph_edges)
-  return graph_nodes, graph_edges, plot
+  return graph_nodes, graph_edges, edges_brut, weights, plot
 end
 
 #graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
