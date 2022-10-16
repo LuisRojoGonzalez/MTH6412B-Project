@@ -7,3 +7,6 @@ include("kruskal.jl")
 g = build_graph("bayg29.tsp")
 
 mst = kruskal(g)
+
+mst["MST"]
+mst["Distance"]
