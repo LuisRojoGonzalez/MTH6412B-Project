@@ -1,4 +1,6 @@
 import Base.show
+include("$(pwd())/edge.jl")
+include("$(pwd())/node.jl")
 
 #include("edge.jl")
 """Type abstrait dont d'autres types de graphes dériveront."""
