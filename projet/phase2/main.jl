@@ -4,7 +4,7 @@
 include("read_stsp.jl")
 include("kruskal.jl")
 
-g = build_graph("bayg29.tsp")
+g = build_graph("bays29.tsp")
 
 mst = kruskal(g)
 
