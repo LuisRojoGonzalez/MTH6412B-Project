@@ -5,8 +5,7 @@ include("$(pwd())/graph.jl")
 This script contains the kruskal algorithm to create a minimum spanning tree of a undirected graph. The following
 implementation is based on pseudo-code in Introcution to algorithms (3 eds.) section 23.2 pp. 631.
 """
-
-function kruskal(g::Graph{T})
+function kruskal(g::Graph{T}) where T
     # we create the MST object
     A = []
     
