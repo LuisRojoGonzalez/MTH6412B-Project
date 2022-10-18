@@ -8,5 +8,5 @@ g = build_graph("bays29.tsp")
 
 mst = kruskal(g)
 
-mst["MST"]
-mst["Distance"]
+@mst["MST"]
+@mst["Distance"]
