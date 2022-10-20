@@ -1,7 +1,5 @@
 using Plots
 
-#using("graph.jl")
-
 """Analyse un fichier .tsp et renvoie un dictionnaire avec les données de l'entête."""
 function read_header(filename::String)
 
@@ -230,9 +228,7 @@ end
 
 #=
 """Affiche un graphe étant données un ensemble de noeuds et d'arêtes.
-
 Exemple :
-
     graph_nodes, graph_edges = read_stsp("bayg29.tsp")
     plot_graph(graph_nodes, graph_edges)
     savefig("bayg29.pdf")
@@ -274,6 +270,3 @@ function build_graph(filename::String)
   return Dict("Nodes" => graph_nodes, "Edges_m" => graph_edges,
               "Edges_v" => edges_brut, "Weights" => weights, "Plot" => plot)
 end
-
-#graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
-#plot_graph(graph_nodes, graph_edges)
