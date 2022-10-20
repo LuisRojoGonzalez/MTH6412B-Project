@@ -6,43 +6,51 @@ This script contains the kruskal algorithm to create a minimum spanning tree of 
 implementation is based on pseudo-code in Introcution to algorithms (3 eds.) section 23.2 pp. 631.
 """
 function kruskal(g)#(g::Graph{T}) where T
-    # we create the MST object
-    A = []
     
-    # initializes the sum of the weights
-    total = 0
-    
-    # initialize the set of trees
-    #tree_set = [[i] for i in 1:length(g["Edges_m"])]
-    tree_set = [[i] for i in 1:length(g["Nodes"])]
-    
+    # initialize the MST object
+    mst = []
+
+    # initialize the distance or cost of the minimum spanning tree (MST)
+    mst_cost = 0
+
     # it gets the index in which ordering the edges
     sortindex = sortperm(g["Weights"])
-    
-    # initializes the counter
-    index = 0
-    
-    # we know that there are going to be |V|-1 edges
-    while length(A) < length(g["Nodes"]) - 1
-        index += 1
-        # gets the edge
-        edge = g["Edges_v"][sortindex[index]] # replace sortindex[1] with the counter in the loop
-        u, v = edge[1], edge[2]
-        
-        # checks whether the trees are the same
-        if !isequal(tree_set[u], tree_set[v])
-            # adds the edge to the MST and its corresponding weight w
-            w = g["Weights"][sortindex[index]]
-            push!(A, [u,v,w])
-            
-            # makes the union of the sets
-            push!(tree_set[u], v)
-            push!(tree_set[v], u)
-            
-            # updates the sum of the weights
-            total = total + w
+
+    # creates the list of parents
+    parent = [i for i in 1:length(g["Nodes"])]
+
+    # recursive function to find where the node comes from
+    function trace_parent(i)
+        if i != parent[i]
+            parent[i] = trace_parent(parent[i])
         end
+        return parent[i]
     end
-    # it returns the MST construction and the total distance in it
-    return Dict("MST" => A, "Distance" => total)
+    
+    for index in sortindex
+
+        # gets the parent of the origin node
+        parent_a = trace_parent(g["Edges_v"][index][1][1])
+
+        # gets the parent of the destination node
+        parent_b = trace_parent(g["Edges_v"][index][2][1])
+
+        # if they belong to different trees then
+        if parent_a != parent_b
+
+            # add the cost to the current MST
+            mst_cost += g["Weights"][index]
+
+            # update the tree by adding the edge
+            push!(mst, g["Edges_v"][index])
+
+            # update the list of parents
+            parent[parent_a] = parent_b
+
+        end
+    
+    end
+
+    return Dict("MST" => mst, "Distance" => mst_cost)
+
 end
