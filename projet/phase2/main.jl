@@ -12,7 +12,7 @@ include("kruskal.jl")
 # @show mst["Distance"]
 
 ####################################
-# create the graph for testing
+### create the graph for testing ###
 ####################################
 
 test_1 = build_graph("Test_1.tsp")
@@ -23,5 +23,13 @@ test_1["Weights"] = test_1["Weights"][keep_edges]
 test_1["Edges_v"] = test_1["Edges_v"][keep_edges]
 
 test_1_mst = kruskal(test_1)
-@show test_1_mst["MST"]
-@show test_1_mst["Distance"]
+
+######################
+#### Test section ####
+######################
+using Test
+
+@testset "Properties and known solution of the MST" begin
+    @test length(test_1_mst["MST"]) == length(test_1["Nodes"]) - 1
+    @test test_1_mst["Distance"] == 37 
+end
