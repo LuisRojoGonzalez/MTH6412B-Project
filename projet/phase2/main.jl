@@ -1,6 +1,12 @@
 # this script calls the others while eases the access to the
 # filename and saving the object via build_graph function
 
+# path where the project is allocated
+#path = "/Users/luisrojo/Library/CloudStorage/OneDrive-usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/"
+
+# include the other scripts
+#include("$(path)/project/phase2/read_stsp.jl")
+#include("$(path)/project/phase2/kruskal.jl")
 include("read_stsp.jl")
 include("kruskal.jl")
 

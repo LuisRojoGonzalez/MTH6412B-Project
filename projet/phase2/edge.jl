@@ -1,5 +1,5 @@
 import Base.show
-include("node.jl")
+#include("node.jl")
 
 """Type abstrait dont d'autres types d'aretes dériveront."""
 abstract type AbstractEdge{T} end
@@ -8,7 +8,7 @@ abstract type AbstractEdge{T} end
 """
 mutable struct Edge{T} <: AbstractEdge{T}
   ends::Tuple{Node{T}, Node{T}}
-  weight::Int
+  weight::T
 end
 
 ends(edge::AbstractEdge) = edge.ends

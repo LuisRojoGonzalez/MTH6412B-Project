@@ -1,6 +1,6 @@
 import Base.show
-include("$(pwd())/edge.jl")
-include("$(pwd())/node.jl")
+# include("edge.jl")
+# include("node.jl")
 
 #include("edge.jl")
 """Type abstrait dont d'autres types de graphes dériveront."""
@@ -24,6 +24,8 @@ mutable struct Graph{T} <: AbstractGraph{T}
   # this has been added to consider an edge
   edges::Vector{Edge{T}}
 end
+
+#Graph{T}(name::String) = Graph(name,node{T}[],Edge{T}[])
 
 """This adds a node to the graph,"""
 function add_node!(graph::Graph{T}, node::Node{T}) where T

@@ -1,5 +1,7 @@
 import Base
-include("$(pwd())/graph.jl")
+# include("graph.jl")
+# include("node.jl")
+# include("edge.jl")
 
 """
 This script contains the kruskal algorithm to create a minimum spanning tree of a undirected graph. The following
@@ -21,6 +23,7 @@ function kruskal(g)#(g::Graph{T}) where T
 
     # recursive function to find where the node comes from
     function trace_parent(i)
+        counter = 0
         if i != parent[i]
             parent[i] = trace_parent(parent[i])
         end
