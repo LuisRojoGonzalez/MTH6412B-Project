@@ -5,12 +5,6 @@ This script contains prim's algorithm to get a minimum spanning tree considering
 the adjacency matrix and offer the possibility of selecting the first node to be included in the tree.
 Otherwise, if the first node is not especified, then a random selection is made.
 """
-test_1 = build_graph("Test_1.tsp")
-
-# modify the graph to drop inexisting arcs
-keep_edges = test_1["Weights"] .!= 1000
-test_1["Weights"] = test_1["Weights"][keep_edges]
-test_1["Edges_v"] = test_1["Edges_v"][keep_edges]
 
 """
 The adjacency matrix is initialized with inifinity elements regarding those not existing edges. Then, its elements are
@@ -101,6 +95,6 @@ function prim(graph, n_start = nothing)
         n_edge += 1
     end
 
-    return mstEdges, mstWeights
+    return Dict("MST" => mstEdges, "Distance" => mstWeights)
 end
 
