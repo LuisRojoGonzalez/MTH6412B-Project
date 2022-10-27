@@ -1,5 +1,6 @@
-include("../phase2/kruskal.jl") # calls the previous implementations of kruskal's algorithm
+include("../phase2/kruskal.jl") # calls prim's algorithm
 include("prim.jl") # calls prim's algorithm
+include("kruskal_V2.jl") # calls kruskal's algorithm
 
 """
 This files contains the example on how to construct a minimum spanning tree using either the Kruskal's or Prim's algorithm.
@@ -20,6 +21,7 @@ test_1["Weights"] = test_1["Weights"][keep_edges]
 test_1["Edges_v"] = test_1["Edges_v"][keep_edges]
 
 mstKruskal = kruskal(test_1)
+mstKruskal_V2 = kruskal_v2(test_1)
 mstPrim = prim(test_1)
 
 ######################
@@ -30,7 +32,11 @@ using Test
 @testset "Properties and known solution of the MST" begin
     @testset "Kruskal algorithm with no acceleration heuristics" begin
         @test length(mstKruskal["MST"]) == length(test_1["Nodes"]) - 1
-        @test mstKruskal["Distance"] == 37
+        @test sum(mstKruskal["Distance"]) == 37
+    end
+    @testset "Kruskal algorithm with acceleration heuristics" begin
+        @test length(mstKruskal_V2["MST"]) == length(test_1["Nodes"]) - 1
+        @test sum(mstKruskal_V2["Distance"]) == 37
     end
     @testset "Prim algorithm" begin
         @test length(mstPrim["MST"]) == length(test_1["Nodes"]) - 1
