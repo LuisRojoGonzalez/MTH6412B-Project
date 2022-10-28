@@ -43,3 +43,38 @@ using Test
         @test sum(mstPrim["Distance"]) == 37
     end
 end
+
+# this section will test the instances wo chekc the running times with other instances
+instances = [item for item in walkdir("../../instances/stsp")][1][3]
+
+# install dataframes library
+using Pkg
+Pkg.add("DataFrames")
+
+# create the object to save the results
+using DataFrames
+results = DataFrame(Nodes = Int[], Kruskal = [], Kruskal_2 = [], Prim = [])
+
+for instance in instances
+    if instance in ["brazil58.tsp", "brg180.tsp", "fri26.tsp", "gr17.tsp", "gr21.tsp", "gr24.tsp", "gr48.tsp", "hk48.tsp", "swiss42.tsp"]
+        continue
+    end
+
+    println("Solving instance $(instance)")
+    graph = build_graph(instance)
+
+    # measures the elapsed time
+    time_kruskal = (@timed kruskal(graph))[2]
+    time_kruskal_2 = (@timed kruskal_v2(graph))[2]
+    time_prim = (@timed prim(graph))[2]
+
+    # create mst with different techniques and add the times to the results object
+    push!(results, [length(graph["Nodes"]), time_kruskal, time_kruskal_2, time_prim])
+
+end
+
+Pkg.add("StatsPlots")
+using StatsPlots
+
+@df results plot(:Nodes, [:Kruskal :Kruskal_2 :Prim], color = [:red :blue :green],
+                 title = "Running times vs number of nodes")
