@@ -1,6 +1,7 @@
 import Base.show
+include("node.jl")
+include("edge.jl")
 
-#include("edge.jl")
 """Type abstrait dont d'autres types de graphes dériveront."""
 abstract type AbstractGraph{T} end
 
@@ -31,7 +32,7 @@ end
 
 """while this adds the edges to it."""
 function add_edge!(graph::Graph{T}, edge::Edge{T}) where T
-  push!(graph.edges,edge)
+  push!(graph.edges, edge)
   graph
 end
 
