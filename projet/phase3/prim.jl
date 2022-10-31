@@ -7,36 +7,14 @@ Otherwise, if the first node is not especified, then a random selection is made.
 """
 
 """
-The adjacency matrix is initialized with inifinity elements regarding those not existing edges. Then, its elements are
-replaced accordingly as the weights of those edges that exist.
-"""
-# creates the adjacency matrix
-function adjacency_matrix(graph)
-    # creates a matrix filled with infinity regarding not existing edges
-    A = Inf*ones(length(graph["Nodes"]), length(graph["Nodes"]))
-    
-    # fill-out the matrix with corresponding weight
-    for i in 1:length(graph["Edges_v"])
-    
-        # get the node indicating the position in the matrix
-        A_1 = graph["Edges_v"][i][1]
-        A_2 = graph["Edges_v"][i][2]
-        
-        # replace the corresponding value with the weight
-        A[A_1,A_2] = graph["Weights"][i]
-    end
-
-    return A
-end
-
-"""
 This function uses a graph and then invoke the function to create the adjacency matrix. Besides, it allows the user to indicate
 the starting node. Otherwise, the function picks a random node to start the process.
 """
 function prim(graph, n_start = nothing)
 
     # create the adjacency matrix
-    A = adjacency_matrix(graph)
+    #A = adjacency_matrix(graph)
+    A = graph["Adj_matrix"]
     
     # check whether a starting node is especified, if not then select a random node to start
     n_input = isnothing(n_start) ? rand((range(1, length = size(A, 1)))) : n_start

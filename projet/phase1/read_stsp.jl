@@ -1,6 +1,5 @@
 using Plots
-
-#using("graph.jl")
+include("graph.jl")
 
 """Analyse un fichier .tsp et renvoie un dictionnaire avec les données de l'entête."""
 function read_header(filename::String)
@@ -230,9 +229,7 @@ end
 
 #=
 """Affiche un graphe étant données un ensemble de noeuds et d'arêtes.
-
 Exemple :
-
     graph_nodes, graph_edges = read_stsp("bayg29.tsp")
     plot_graph(graph_nodes, graph_edges)
     savefig("bayg29.pdf")
@@ -260,20 +257,41 @@ function plot_graph(nodes, edges)
   fig
 end
 
-"""Fonction de commodité qui lit un fichier stsp et trace le graphe."""
-function plot_graph(filename::String)
-  graph_nodes, graph_edges = read_stsp(filename)
-  plot_graph(graph_nodes, graph_edges)
+# """Fonction de commodité qui lit un fichier stsp et trace le graphe."""
+# function plot_graph(filename::String)
+#   graph_nodes, graph_edges = read_stsp(filename)
+#   #plot_graph(graph_nodes, graph_edges)
+# end
+
+"""
+The adjacency matrix is initialized with inifinity elements regarding those not existing edges. Then, its elements are
+replaced accordingly as the weights of those edges that exist.
+"""
+# creates the adjacency matrix
+function adjacency_matrix(graph_nodes, edges_brut, weights)
+    # creates a matrix filled with infinity regarding not existing edges
+    A = Inf*ones(length(graph_nodes), length(graph_nodes))
+    
+    # fill-out the matrix with corresponding weight
+    for i in 1:length(edges_brut)
+    
+        # get the node indicating the position in the matrix
+        A_1 = edges_brut[i][1]
+        A_2 = edges_brut[i][2]
+        
+        # replace the corresponding value with the weight
+        A[A_1,A_2] = weights[i]
+    end
+
+    return A
 end
 
 """Function to construct the graph."""
 function build_graph(filename::String)
-  path = "/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/$(filename)"
+  path = "../../instances/stsp/$(filename)"
   graph_nodes, graph_edges, edges_brut, weights = read_stsp(path)
-  plot = plot_graph(graph_nodes, graph_edges)
+  adj_matrix = adjacency_matrix(graph_nodes, edges_brut, weights)
+  #plot = plot_graph(graph_nodes, graph_edges)
   return Dict("Nodes" => graph_nodes, "Edges_m" => graph_edges,
-              "Edges_v" => edges_brut, "Weights" => weights, "Plot" => plot)
+              "Edges_v" => edges_brut, "Weights" => weights, "Adj_matrix" => adj_matrix)
 end
-
-#graph_nodes, graph_edges = read_stsp("/Users/luisrojo/Desktop/OneDrive - usach.cl/PhD/Courses_Polymtl/OR Algorithms/Laboratory/MTH6412B-Project/instances/stsp/bayg29.tsp")
-#plot_graph(graph_nodes, graph_edges)
