@@ -3,9 +3,9 @@ include("prim.jl") # calls prim's algorithm
 include("kruskal_V2.jl") # calls kruskal's algorithm
 
 """
-This files contains the example on how to construct a minimum spanning tree using either the Kruskal's or Prim's algorithm.
-If Kruskal's algorithm is used, then the user may decide to use an acceleration heuristic. Otherwise, the classic Kruskal's
-algorithm is used. On the other hand, if Prim's algorithm is used, then the user may indicate the node to start constructing the
+This files contains the example on how to construct a minimum spanning tree using either the Kruskal's or Prim's algorithm. Furthermore,
+there is also a Kruskal's algorithm version that uses acceleration heuristics. In particular, the path compression and union by rank
+techniques. On the other hand, if Prim's algorithm is used, then the user may indicate the node to start constructing the
 minimum spanning tree; otherwise, a random selection is performed.
 """
 
@@ -44,6 +44,23 @@ using Test
     end
 end
 
+"""
+We can also perform benchmark runnings via BenchmarkTools library.
+"""
+
+using Pkg
+Pkg.add("BenchmarkTools")
+using BenchmarkTools
+
+@benchmark kruskal(test_1)
+@benchmark kruskal_v2(test_1)
+@benchmark prim(test_1)
+
+"""
+This part runs the algorithms over different instances. To do that, it saves the file's names and then apply the algorithms
+sequentially. Besides, to save the results in terms of the running times and the number of nodes, a DataFrame is created to
+plot the results afterwards.
+"""
 # this section will test the instances wo chekc the running times with other instances
 instances = [item for item in walkdir("../../instances/stsp")][1][3]
 
