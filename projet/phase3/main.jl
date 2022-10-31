@@ -44,30 +44,30 @@ using Test
     end
 end
 
-"""
-We can also perform benchmark runnings via BenchmarkTools library.
-"""
+# """
+# We can also perform benchmark runnings via BenchmarkTools library.
+# """
 
-using Pkg
-Pkg.add("BenchmarkTools")
-using BenchmarkTools
+# using Pkg
+# Pkg.add("BenchmarkTools")
+# using BenchmarkTools
 
-@benchmark kruskal(test_1)
-@benchmark kruskal_v2(test_1)
-@benchmark prim(test_1)
+# @benchmark kruskal(test_1)
+# @benchmark kruskal_v2(test_1)
+# @benchmark prim(test_1)
 
-"""
-Furthermore, we can use the ProfileView library to see ...
-"""
+# """
+# Furthermore, we can use the ProfileView library to see ...
+# """
 
-using Pkg
-Pkg.add("ProfileView")
-using ProfileView
+# using Pkg
+# Pkg.add("ProfileView")
+# using ProfileView
 
-# one must indicate the library or procedence because VScode uses its own @profview function
-ProfileView.@profview kruskal(test_1)
-ProfileView.@profview kruskal_v2(test_1)
-ProfileView.@profview prim(test_1)
+# # one must indicate the library or procedence because VScode uses its own @profview function
+# ProfileView.@profview kruskal(test_1)
+# ProfileView.@profview kruskal_v2(test_1)
+# ProfileView.@profview prim(test_1)
 
 """
 This part runs the algorithms over different instances. To do that, it saves the file's names and then apply the algorithms
@@ -86,7 +86,7 @@ using DataFrames
 results = DataFrame(Nodes = Int[], Kruskal = [], Kruskal_2 = [], Prim = [])
 
 for instance in instances
-    if instance in ["brazil58.tsp", "brg180.tsp", "fri26.tsp", "gr17.tsp", "gr21.tsp", "gr24.tsp", "gr48.tsp", "hk48.tsp", "swiss42.tsp"]
+    if instance in ["brazil58.tsp", "brg180.tsp", "fri26.tsp", "gr17.tsp", "gr21.tsp", "gr24.tsp", "gr48.tsp", "hk48.tsp", "swiss42.tsp", "pa561.tsp"]
         continue
     end
 
@@ -103,8 +103,12 @@ for instance in instances
 
 end
 
+# load library
 Pkg.add("StatsPlots")
 using StatsPlots
 
-@df results plot(:Nodes, [:Kruskal :Kruskal_2 :Prim], color = [:red :blue :green],
-                 title = "Running times vs number of nodes")
+# make the plot
+@df results plot(:Nodes, [:Kruskal :Kruskal_2 :Prim], color = [:red :blue :green], title = "Running times vs number of nodes")
+
+# saves the plot
+savefig("Running_times.png")
