@@ -57,6 +57,19 @@ using BenchmarkTools
 @benchmark prim(test_1)
 
 """
+Furthermore, we can use the ProfileView library to see ...
+"""
+
+using Pkg
+Pkg.add("ProfileView")
+using ProfileView
+
+# one must indicate the library or procedence because VScode uses its own @profview function
+ProfileView.@profview kruskal(test_1)
+ProfileView.@profview kruskal_v2(test_1)
+ProfileView.@profview prim(test_1)
+
+"""
 This part runs the algorithms over different instances. To do that, it saves the file's names and then apply the algorithms
 sequentially. Besides, to save the results in terms of the running times and the number of nodes, a DataFrame is created to
 plot the results afterwards.
@@ -67,9 +80,9 @@ instances = [item for item in walkdir("../../instances/stsp")][1][3]
 # install dataframes library
 using Pkg
 Pkg.add("DataFrames")
+using DataFrames
 
 # create the object to save the results
-using DataFrames
 results = DataFrame(Nodes = Int[], Kruskal = [], Kruskal_2 = [], Prim = [])
 
 for instance in instances
